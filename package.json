@@ -10,7 +10,6 @@
     "npm": "6.14.8"
   },
   "scripts": {
-    "postinstall": "curl -s https://raw.githubusercontent.com/reactorcore/pomander/master/bin/install | bash",
     "start": "npx nodemon ./server.js",
     "clean": "rm -rf datastore/data/* datastore/counter.txt",
     "lint": "eslint ./",
@@ -25,7 +24,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor.git",
+    "eslint-config-hackreactor": "https://github.com/reactorcore/eslint-config-hackreactor.git",
     "mocha": "^5.2.0",
     "nodemon": "^2.0.6"
   }
