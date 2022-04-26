@@ -19,6 +19,7 @@ app.use(express.static(path.join(__dirname, './public')));
 
 // Create (Crud) -- collection route
 app.post('/todo', (req, res) => {
+  //console.log(req.body.todoText);
   Todo.create(req.body.todoText, (err, newTodo) => {
     if (err) {
       res.sendStatus(400);
@@ -42,6 +43,7 @@ app.get('/todo', (req, res) => {
 // Read one (cRud) -- member route
 app.get('/todo/:id', (req, res) => {
   Todo.readOne(req.params.id, (err, todo) => {
+    console.log(req.params);
     if (todo) {
       res.status(200).json(todo);
     } else {
