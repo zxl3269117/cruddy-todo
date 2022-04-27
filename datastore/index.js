@@ -61,13 +61,23 @@ exports.readOne = (id, callback) => {
 };
 
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+  fs.readFile(`./datastore/data/${id}.txt`, (err, item) => {
+    if (err) {
+      throw ('err');
+    } else {
+      if (!item) {
+        callback(new Error(`No item with id: ${id}`));
+      } else {
+        fs.writeFile(`./datastore/data/${id}.txt`, text, (err) => {
+          if (err) {
+            throw ('err');
+          } else {
+            callback(null, { id, text });
+          }
+        });
+      }
+    }
+  });
 };
 
 exports.delete = (id, callback) => {
