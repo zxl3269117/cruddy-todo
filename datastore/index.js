@@ -30,10 +30,20 @@ exports.create = (text, callback) => {
 };
 
 exports.readAll = (callback) => {
-  var data = _.map(items, (text, id) => {
-    return { id, text };
+  fs.readdir('./datastore/data', (err, files) => {
+    if (err) {
+      throw ('err');
+    } else {
+      console.log(files);
+      var data = _.map(files, (id) => {
+        id = id.slice(0, 5);
+        var text = id;
+        return { id, text };
+      });
+      callback(null, data);
+    }
   });
-  callback(null, data);
+
 };
 
 exports.readOne = (id, callback) => {
