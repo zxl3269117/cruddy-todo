@@ -38,25 +38,28 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = () => {
+exports.getNextUniqueId = (callback) => {
   // set up a CB for readCounter
-  
-  var writeCounterCB = (err, counterString) => {
-    console.log('counterString:', counterString);
-    return counterString;
-  };
+  //var counterString = '';
+  // var writeCounterCB = (err, counterString) => {
+  //   console.log('counterString:', counterString);
+  //   return counterString;
+  // };
 
   var readCounterCB = (err, data) => {
     console.log('DATA: ', data);
-    var count = data;
-    count++;
-    console.log(writeCounter(count, writeCounterCB));
+    if (err) {
+      throw ('err');
+    } else {
+      var count = data;
+      count++;
+      writeCounter(count, callback);
+      readCounter(readCounterCB);
+    }
   };
 
-  readCounter(readCounterCB);
   // reading the existing counter using readCounter function
   // we're going to write the counter to HD using writeCounter function
-
   // return zeroPaddedNumber(counter);
 };
 
