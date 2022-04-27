@@ -47,17 +47,16 @@ exports.getNextUniqueId = (callback) => {
   // };
 
   var readCounterCB = (err, data) => {
-    console.log('DATA: ', data);
+    //console.log('DATA: ', data);
     if (err) {
       throw ('err');
     } else {
       var count = data;
       count++;
       writeCounter(count, callback);
-      readCounter(readCounterCB);
     }
   };
-
+  readCounter(readCounterCB);
   // reading the existing counter using readCounter function
   // we're going to write the counter to HD using writeCounter function
   // return zeroPaddedNumber(counter);
