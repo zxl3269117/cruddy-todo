@@ -16,8 +16,6 @@ exports.create = (text, callback) => {
         if (err) {
           throw ('err');
         } else {
-          console.log('TEXT: ', text);
-          console.log('CounterString: ', id);
           // items[countString] = text;
           callback(null, { id, text });
         }
@@ -34,7 +32,6 @@ exports.readAll = (callback) => {
     if (err) {
       throw ('err');
     } else {
-      console.log(files);
       var data = _.map(files, (id) => {
         id = id.slice(0, 5);
         var text = id;
@@ -47,12 +44,20 @@ exports.readAll = (callback) => {
 };
 
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback(null, { id, text });
-  }
+  fs.readFile(`./datastore/data/${id}.txt`, (err, text) => {
+    if (err) {
+      throw ('err');
+    } else {
+      if (!text) {
+        callback(new Error(`No item with id: ${id}`));
+      } else {
+        // console.log('id', id);
+        // console.log('text', text.toString());
+        text = text.toString();
+        callback(null, { id, text });
+      }
+    }
+  });
 };
 
 exports.update = (id, text, callback) => {
