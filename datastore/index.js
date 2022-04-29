@@ -10,43 +10,61 @@ var items = {};
 exports.create = (text, callback) => {
   var uniqueIdCb = (err, id) => {
     if (err) {
-      throw ('err');
+      callback(err);
     } else {
-      fs.writeFile(`./datastore/data/${id}.txt`, text, (err) => {
+      fs.writeFile(`${exports.dataDir}/${id}.txt`, text, (err) => {
         if (err) {
-          throw ('err');
+          callback(err);
         } else {
-          // items[countString] = text;
           callback(null, { id, text });
         }
       });
     }
   };
   counter.getNextUniqueId(uniqueIdCb);
-  // counter.getNextUniqueId(uniqueIdCb)
-  // fs.writeFile(directory, text, CBafterWritingTheFile)
 };
 
 exports.readAll = (callback) => {
-  fs.readdir('./datastore/data', (err, files) => {
+  fs.readdir(exports.dataDir, (err, files) => {
     if (err) {
-      throw ('err');
+      callback(err);
     } else {
       var data = _.map(files, (id) => {
-        id = id.slice(0, 5);
-        var text = id;
-        return { id, text };
+        return new Promise((resolve, reject) => {
+          fs.readFile(`${exports.dataDir}/${id}`, (err, content) => {
+            if (!err) {
+              id = id.slice(0, 5);
+              var text = content.toString();
+              resolve({id, text});
+            } else {
+              reject(err);
+            }
+          });
+        });
       });
-      callback(null, data);
+      // console.log(data);
+      Promise.all(data).then((value) => {
+        console.log(value);
+        callback(null, value);
+      });
+      // callback(null, data);
     }
   });
 
 };
 
+// new Promise ((resolve, reject) => {
+  // do something
+  // resolve({id, text})
+//})
+
+// Promise.all([pro1, pro2, ...]).then((value) => {// do somthing})
+// value => [{id1, text1}, {id2, text2}, ..]
+
 exports.readOne = (id, callback) => {
-  fs.readFile(`./datastore/data/${id}.txt`, (err, text) => {
+  fs.readFile(`${exports.dataDir}/${id}.txt`, (err, text) => {
     if (err) {
-      throw ('err');
+      callback(err);
     } else {
       if (!text) {
         callback(new Error(`No item with id: ${id}`));
@@ -61,16 +79,16 @@ exports.readOne = (id, callback) => {
 };
 
 exports.update = (id, text, callback) => {
-  fs.readFile(`./datastore/data/${id}.txt`, (err, item) => {
+  fs.readFile(`${exports.dataDir}/${id}.txt`, (err, item) => {
     if (err) {
-      throw ('err');
+      callback(err);
     } else {
       if (!item) {
         callback(new Error(`No item with id: ${id}`));
       } else {
-        fs.writeFile(`./datastore/data/${id}.txt`, text, (err) => {
+        fs.writeFile(`${exports.dataDir}/${id}.txt`, text, (err) => {
           if (err) {
-            throw ('err');
+            callback(err);
           } else {
             callback(null, { id, text });
           }
@@ -81,17 +99,17 @@ exports.update = (id, text, callback) => {
 };
 
 exports.delete = (id, callback) => {
-  fs.readFile(`./datastore/data/${id}.txt`, (err, item) => {
+  fs.readFile(`${exports.dataDir}/${id}.txt`, (err, item) => {
     if (err) {
-      throw ('err');
+      callback(err);
     } else {
       if (!item) {
         // report an error if item not found
         callback(new Error(`No item with id: ${id}`));
       } else {
-        fs.unlink(`./datastore/data/${id}.txt`, (err) => {
+        fs.unlink(`${exports.dataDir}/${id}.txt`, (err) => {
           if (err) {
-            throw ('err');
+            callback(err);
           } else {
             callback();
           }
