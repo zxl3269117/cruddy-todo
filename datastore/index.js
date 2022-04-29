@@ -42,24 +42,13 @@ exports.readAll = (callback) => {
           });
         });
       });
-      // console.log(data);
       Promise.all(data).then((value) => {
-        console.log(value);
         callback(null, value);
       });
-      // callback(null, data);
     }
   });
 
 };
-
-// new Promise ((resolve, reject) => {
-  // do something
-  // resolve({id, text})
-//})
-
-// Promise.all([pro1, pro2, ...]).then((value) => {// do somthing})
-// value => [{id1, text1}, {id2, text2}, ..]
 
 exports.readOne = (id, callback) => {
   fs.readFile(`${exports.dataDir}/${id}.txt`, (err, text) => {
